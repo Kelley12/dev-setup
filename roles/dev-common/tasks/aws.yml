@@ -1,0 +1,73 @@
+#
+# Gets AWS client working on Macs, and prepares ec2.py-based environments.
+#
+
+---
+
+- name: 'install boto so we can work with AWS'
+  pip:
+    name: 'boto'
+  become: true
+
+- name: 'install/upgrade awscli'
+  pip:
+    name: 'awscli'
+    extra_args: '--ignore-installed six'
+  become: true
+
+- name: 'install httplib2'
+  pip:
+    name: 'httplib2'
+  become: true
+
+- name: 'delete old /etc/ansible/hosts'
+  file:
+    path: '/etc/ansible/hosts'
+    state: 'absent'
+  become: true
+
+- name: 'create /etc/ansible/hosts'
+  file:
+    path: '/etc/ansible/hosts'
+    state: 'directory'
+  become: true
+
+- name: 'copy over ansible hosts'
+  copy:
+    dest: '/etc/ansible/hosts/'
+    src: 'environment/localhost'
+  become: true
+
+- name: 'get ec2.ini'
+  get_url:
+    dest: '/etc/ansible/hosts/'
+    url: 'https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini'
+  become: true
+
+- name: 'disable elasticache in ec2.ini'
+  lineinfile:
+    dest: '/etc/ansible/hosts/ec2.ini'
+    line: 'elasticache = False'
+    regexp: '^(\s|#)*elasticache\s*=.*$'
+  become: true
+
+- name: 'disable rds in ec2.ini'
+  lineinfile:
+    dest: '/etc/ansible/hosts/ec2.ini'
+    line: 'rds = False'
+    regexp: '^(\s|#)*rds\s*=.*$'
+  become: true
+
+- name: 'configure vpc_destination_variable in ec2.ini'
+  lineinfile:
+    dest: '/etc/ansible/hosts/ec2.ini'
+    line: 'vpc_destination_variable = private_ip_address'
+    regexp: '^\s*vpc_destination_variable\s*=.*$'
+  become: true
+
+- name: 'get ec2.py'
+  get_url:
+    dest: '/etc/ansible/hosts/'
+    mode: '0755'
+    url: 'https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py'
+  become: true

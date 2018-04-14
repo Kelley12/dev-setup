@@ -1,0 +1,20 @@
+# Provision Homebrew (aka brew)
+
+# - dont-include: ruby.yml because RVM depends on Homebrew. OS X built-in Ruby is enough to install Homebrew.
+
+---
+
+- name: 'Install Homebrew'
+  shell: 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+  args:
+    creates: '/usr/local/bin/brew'
+
+# didn't use 'update_homebrew: true' on the next task because it stil caused weird issues
+- name: 'Update Homebrew'
+  command: 'brew update'
+
+# @wfoster Could you add comment why this is here? Is it important to install this for brew to function, should this be a separate task?
+- name: 'Install gpg for rvm'
+  homebrew:
+    name: 'gpg'
+    state: 'latest'

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#User specific aliases
+
+alias onyx="ssh bkelley@onyx.boisestate.edu"
+alias chrome="google-chrome --incognito &"
+alias sublime="sublime_text &"
+alias home="cd ~"
+alias hm=home
+alias hoem=home
+alias c="clear"
+alias lsa="ls -a"
+alias lla="ll -a"
+alias vi=vim
+alias ff="find .-name $1"
+alias cd..="cd .."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/sublime
+

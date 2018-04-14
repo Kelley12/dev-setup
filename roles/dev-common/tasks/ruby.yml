@@ -1,0 +1,37 @@
+# Provision rvm & currently supported Ruby version for use on dev Macs.
+#
+# See https://wiki.whitecloudanalytics.com/display/whitecloud2/Ruby
+# For datacenter see common role; this is dev-common!
+
+---
+
+- include: 'brew.yml' # Because RVM installs brew if it's not available, and that's ours to install.
+
+- name: 'Facts to get rvm/ruby installed'
+  set_fact:
+    ruby_version: '2.4.0'
+    rvm_home: '/Users/{{ ansible_user_id }}/.rvm'
+    rvm_bin: '/Users/{{ ansible_user_id }}/.rvm/bin/rvm'
+    user_home: '/Users/{{ ansible_user_id }}'
+
+- name: 'import gpg key for rvm'
+  shell: 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3'
+
+- name: 'Bootstrap install rvm'
+  shell: 'curl -sSL https://get.rvm.io | bash -s stable --auto-dotfiles'
+  args:
+    creates: '{{ rvm_bin }}'
+
+- name: 'rvm get stable'
+  shell: '{{ rvm_bin }} get stable --auto-dotfiles'
+
+- name: 'rvm install'
+  shell: '{{ rvm_bin }} install {{ ruby_version }} --auto-dotfiles --with-openssl-dir=`brew --prefix openssl`'
+  args:
+    creates: '{{ rvm_home }}/gems/ruby-{{ ruby_version }}'
+
+- name: 'rvm use'
+  shell: '{{ rvm_bin }} use {{ ruby_version }}'
+
+- name: 'rvm alias default'
+  shell: '{{ rvm_bin }} alias create default {{ ruby_version }}'

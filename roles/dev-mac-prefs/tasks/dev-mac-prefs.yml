@@ -1,0 +1,48 @@
+---
+
+- name: 'set 1 minute timeout'
+  command: >
+    osascript -e 'tell application "System Events" to set delay interval of screen saver preferences to 60'
+  become: true
+
+- name: 'require passcode after sleep'
+  command: >
+    osascript -e 'tell application "System Events" to set require password to wake of security preferences to true'
+  become: true
+
+- name: 'immediately require password'
+  command: 'defaults write com.apple.screensaver askForPasswordDelay -int 0'
+
+# From here down, source: https://discussions.apple.com/thread/6683455
+
+- name: 'quitting system preferences'
+  command: >
+    osascript -e 'tell application "System Preferences" to quit'
+
+- name: 'stop software update'
+  command: 'softwareupdate --schedule off'
+  become: true
+
+- name: 'turning on automatically check for updates'
+  command: 'defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool YES'
+  become: true
+
+- name: 'turning on downloading new updates in the background'
+  command: 'defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -bool YES'
+  become: true
+
+- name: 'turning on installing system data files & security updates (1 of 2)'
+  command: 'defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ConfigDataInstall -bool YES'
+  become: true
+
+- name: 'turning on installing system data files & security updates (2 of 2)'
+  command: 'defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist CriticalUpdateInstall -bool YES'
+  become: true
+
+- name: 'turning on installing OS X updates'
+  command: 'defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool YES'
+  become: true
+
+- name: 'turning on installing app updates'
+  command: 'defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool YES'
+  become: true

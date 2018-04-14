@@ -1,0 +1,18 @@
+---
+
+# Provision Gradle, which I'd like to try for Java builds going forward.
+- include: 'brew.yml'
+- include: 'java.yml'
+
+- name: 'install gradle'
+  homebrew:
+    name: 'gradle'
+    state: 'latest'
+    update_homebrew: true
+
+- name: 'so that IntelliJ/tools know where Gradle is, add GRADLE_HOME to .profile'
+  lineinfile:
+    create: true
+    dest: '/Users/{{ ansible_user_id }}/.profile'
+    line: 'export GRADLE_HOME=/usr/local/bin/gradle'
+    state: 'present'

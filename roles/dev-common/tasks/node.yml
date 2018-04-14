@@ -1,0 +1,11 @@
+# Provision node, which we now use globally w/ ionic on dev boxes
+
+---
+
+- include: 'brew.yml'
+
+- name: 'install node'
+  homebrew:
+    name: 'node'
+    state: 'latest'
+    update_homebrew: true

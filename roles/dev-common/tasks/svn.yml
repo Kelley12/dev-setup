@@ -1,0 +1,11 @@
+# Provision Subversion, which is preinstalled by Xcode or El Cap (not sure which), but as of Jan 2016 is 1.7. SmartSVN expects 1.8+.
+
+---
+
+- include: 'brew.yml'
+
+- name: 'install subversion (in user space and at least 1.9 for compat w/ SmartSVN, instead of whatever came w/ Xcode/OSX)'
+  homebrew:
+    name: 'subversion'
+    state: 'latest'
+    update_homebrew: true

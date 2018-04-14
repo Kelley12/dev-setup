@@ -1,0 +1,29 @@
+---
+
+# Provision Maven, which devs use to build the product
+- include: 'brew.yml'
+- include: 'java.yml'
+
+- name: 'install maven'
+  homebrew:
+    name: 'maven'
+    state: 'latest'
+    update_homebrew: true
+
+- name: 'compute M2_HOME from newly installed Maven'
+  shell: 'mvn -v | grep "Maven home" | sed "s/Maven home: //g"'
+  register: m2_home
+
+- name: 'remove any old M2_HOME and M3_HOME (sic) lines in .profile'
+  lineinfile:
+    create: true
+    dest: '/Users/{{ ansible_user_id }}/.profile'
+    regexp: 'M2_HOME|M3_HOME'
+    state: 'absent'
+
+- name: 'add M2_HOME to .profile so it is available to IntelliJ/tools'
+  lineinfile:
+    create: true
+    dest: '/Users/{{ ansible_user_id }}/.profile'
+    line: 'export M3_HOME={{ m2_home.stdout }}'
+    state: 'present'

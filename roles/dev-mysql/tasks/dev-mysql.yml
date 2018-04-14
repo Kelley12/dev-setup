@@ -1,0 +1,136 @@
+---
+
+- include: '../../dev-common/tasks/brew.yml'
+
+# Clean up after previous installations of mysql 5.6, which has had several names under brew because 5.7 is now latest.
+
+- name: 'remove current/prior homebrew-installed mysql from launchctl (ignore error since they may not be there on e.g. new boxes)'
+  command: 'launchctl remove homebrew.mxcl.{{ item }}'
+  with_items:
+    - 'mysql'
+    - 'mysql56'
+    - 'mysql@5.6'
+  ignore_errors: true
+
+- name: 'remove current/prior launchctls to avoid accidental reuse'
+  file:
+    path: '~/Library/LaunchAgents/homebrew.mxcl.{{ item }}.plist'
+    state: 'absent'
+  with_items:
+    - 'mysql'
+    - 'mysql56'
+    - 'mysql@5.6'
+
+- name: 'force stop mysql'
+  command: 'killall -m mysql'
+  ignore_errors: true
+
+- name: 'remove prior mysqls from brew (ignore error because package name changes often; these are old names for 5.6 and 5.7)'
+  homebrew:
+    name: '{{ item }}'
+    state: 'absent'
+    update_homebrew: true
+  with_items:
+    - 'mysql'
+    - 'mysql56'
+    - 'mysql@5.6'
+  ignore_errors: true
+
+- name: 'delete mysql data dir (to avoid old permissions issues, sorry about your personal blog DB)'
+  file:
+    path: '/usr/local/var/mysql/'
+    state: 'absent'
+  become: true
+
+# Install & configure mysql
+############
+
+#- name: checkout mysql 5.6.27 for brew
+#  shell: "cd $(brew --prefix) && git checkout e466819900719b711f572837750654baf3bf85cb Library/Formula/mysql.rb"
+#
+#- name: install mysql 5.6.27
+#  homebrew: name=mysql state=latest update_homebrew=true
+
+ # Brew added MySQL 5.6 to their repos so we can install it this way now. Keeping above code commented in case we need to use it ever again
+#- name: install latest mysql
+#  homebrew:
+#    name: 'homebrew/versions/mysql56'
+#    state: latest
+#    update_homebrew: true
+
+# Brew install (above) is not working properly on El Capitan, so I've replaced it with an update and command module for now
+# @brik
+
+- name: 'update Homebrew'
+  homebrew:
+    update_homebrew: true
+
+# have to use command here because ansible doesn't like this package name for some reason
+- name: 'install MySQL 5.6 via Homebrew'
+  command: 'brew install mysql@5.6'
+
+# have to use --force because mysql@5.6 is "keg-only" whatever tf that means
+- name: 'symlink mysql install directory to /usr/local/bin'
+  command: 'brew link --force mysql@5.6'
+
+# When we move to 5.7 (WCA-1049) don't use --tmpdir (gone) and use --insecure; this prevents it from randomly generating a root password
+# we are fine using --insecure because we set a root password very shortly after
+- name: 'mysql_install_db'
+  shell: "mysql_install_db --verbose --user=`whoami` --basedir=`brew --prefix mysql@5.6` --datadir=/usr/local/var/mysql --tmpdir=/tmp"
+
+- name: 'create /etc/mysql/conf.d'
+  file:
+    path: '/etc/mysql/conf.d'
+    state: 'directory'
+  become: true
+
+- name: 'create my.cnf if it does not exist'
+  file:
+    path: '/etc/my.cnf'
+    state: 'touch'
+  become: true
+
+- name: 'make sure my.cnf includes /etc/mysql/conf.d'
+  lineinfile:
+    dest: '/etc/my.cnf'
+    line: '!includedir /etc/mysql/conf.d/'
+  become: true
+
+- name: 'copy /etc/mysql/conf.d/dev.cnf'
+  copy:
+    dest: '/etc/mysql/conf.d/'
+    src: 'dev.cnf'
+  become: true
+
+# We use the /usr/local/opt/mysql@5.6 symlink to avoid having to glob or be specific to minor
+# version... we want only the latest. If brew is not setting up this symlink something may
+# be wrong with brew (perhaps related to Yosemite System Integrity Protection, which has
+# caused us some trouble before?)
+- name: 'make sure ~/Library/LaunchAgents directory exists'
+  file:
+    path: '~/Library/LaunchAgents'
+    state: 'directory'
+
+- name: 'link mysql into ~/Library/LaunchAgents'
+  file:
+    dest: '~/Library/LaunchAgents/homebrew.mxcl.mysql@5.6.plist'
+    src: '/usr/local/opt/mysql@5.6/homebrew.mxcl.mysql@5.6.plist'
+    state: 'link'
+
+- name: 'add to launchctl'
+  command: 'launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql@5.6.plist'
+
+# 5.7/WCA-1049: hopefully not needed for MySQL 5.7:
+- name: 'copy openssl 1.0.2a-1 to brew'
+  unarchive:
+    creates: '/usr/local/Cellar/openssl/1.0.2a-1'
+    dest: '/usr/local/Cellar/openssl'
+    src: 'openssl.zip'
+
+- name: 'switch to openssl 1.0.2a-1'
+  command: 'brew switch openssl 1.0.2a-1'
+
+# Start mysql
+
+- name: 'start mysql'
+  command: 'mysql.server start'

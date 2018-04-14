@@ -1,0 +1,30 @@
+# Installs every gem in every Gemfile in ~/dev, which is perhaps a step too far to really be a part of provision
+# depending on how you manage you working copies, and because dependencies of the gems are not necessarily
+# something we provision (e.g. mysql2 native extensions needs mysql libs, and what provisions those?)
+
+---
+
+- name: 'Key facts needed to install gems (see also dev-common/tasks/ruby.yml)'
+  set_fact:
+    ruby_version: '2.4.0'
+    rvm_home: '/Users/{{ ansible_user_id }}/.rvm'
+    rvm_bin: '/Users/{{ ansible_user_id }}/.rvm/bin/rvm'
+    user_home: '/Users/{{ ansible_user_id }}'
+
+- name: 'update OS X certs before installing gems (e.g. gem aws-sdk-core will use SSL and expect updated certs)'
+  shell: '{{ rvm_bin }} osx-ssl-certs update {{ ruby_version }}'
+  become: true
+
+- name: 'gem install bundler'
+  shell: '{{ rvm_bin }} all do gem install bundler'
+
+- name: 'register all Gemfiles currently under ~/dev'
+  shell: 'find {{ user_home }}/dev -name Gemfile | xargs -Iz dirname z'
+  register: gemfile_dirs
+
+- name: 'bundle install for each Gemfile currently under ~/dev (errors ignored because dependencies of gems may be missing.)'
+  shell: '{{ rvm_bin }} all do bundle install'
+  args:
+    chdir: '{{ item }}'
+  with_items: '{{ gemfile_dirs.stdout_lines }}'
+  ignore_errors: true

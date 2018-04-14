@@ -1,0 +1,26 @@
+# Function to install a Mac .pkg identified by clean_name, url, app_name. May be a candiate to replace w/ brew-cask.
+
+---
+
+- name: 'installing new package'
+  debug:
+    msg: 'Now installing {{ clean_name }}'
+
+- name: 'creating tmp directory'
+  file:
+    path: '/.ansible-downloads'
+    state: 'directory'
+
+- name: 'downloading package'
+  get_url:
+    dest: '/.ansible-downloads/{{ app_name }}.pkg'
+    url: '{{ url }}'
+
+- name: 'install pkg'
+  command: 'installer -pkg /.ansible-downloads/{{ app_name }}.pkg -target /'
+  become: true
+
+- name: 'removing tmp directory'
+  file:
+    path: '/.ansible-downloads'
+    state: 'absent'

@@ -1,0 +1,15 @@
+[mysqld]
+group_concat_max_len=16777215 # sometimes we use pretty huge group_concat
+local-infile=1
+max_allowed_packet=100663296 # required for large data loads when executing LOAD DATA for a csv file
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+ssl-ca=/etc/mysql/ssl/mysql-ca.pem
+ssl-cert=/etc/mysql/ssl/mysql-server-cert.pem
+ssl-key=/etc/mysql/ssl/mysql-server-key.pem
+table_open_cache=250 # prevent connectivity problems related to running out of file descriptors on OS X with file-per-table
+secure_file_priv=""
+
+[mysql]
+default-character-set=latin1
+local-infile=1
+secure-auth=0
