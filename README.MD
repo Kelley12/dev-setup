@@ -12,6 +12,10 @@ Install the necessary components using [setup-init.sh](https://gist.github.com/K
 
     ansible-playbook dev-setup.yml  -i environment/localhost --ask-sudo-pass
 
+To run just a subset of tasks
+
+    ansible-playbook dev-setup.yml  -i environment/localhost --ask-sudo-pass --tags "sublime,bash_alias"
+
 ## Other Info
 
  To add/change the bash alias, edit the /roles/dev-common/files/bash_alias file
