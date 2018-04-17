@@ -10,7 +10,7 @@ Install the necessary components using [setup-init.sh](https://gist.github.com/K
 
 ## Execution
 
-    ansible-playbook setup.yml  -i environment/localhost --ask-sudo-pass
+    ansible-playbook dev-setup.yml  -i environment/localhost --ask-sudo-pass
 
 ## Other Info
 
