@@ -23,8 +23,13 @@
     url: "http://sublime.wbond.net/Package%20Control.sublime-package"
     dest: "~/Library/Application Support/Sublime Text 3/Installed Packages/Package Control.sublime-package"
 
-- name: 'Create a symlink for sublime'
+- name: 'Create a symlink (subl) for sublime'
   command: ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl arg1
+  args:
+    creates: /usr/local/bin/sublime
+
+- name: 'Create a symlink (sublime) for sublime'
+  command: ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/sublime arg1
   args:
     creates: /usr/local/bin/sublime
 
