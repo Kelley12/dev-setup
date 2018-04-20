@@ -4,9 +4,6 @@
   copy:
     dest: '/etc/profile.d/wca-java.sh'
     src: 'wca-java.sh'
-#    group: 'wcaops'
-#    mode: '0755'
-#    owner: 'root'
   become: true
   when: ansible_os_family == 'RedHat'
 
@@ -53,7 +50,7 @@
   debug:
     msg: 'Java homes are {{ java_homes }}'
 
-# WCA-3165 Java certs used to be at {{ item }}/jre/lib/security/cacerts instead. Let this fail if directory's missing until 8's unsupported, then delete task completely.
+# Java certs used to be at {{ item }}/jre/lib/security/cacerts instead. Let this fail if directory's missing until 8's unsupported, then delete task completely.
 - name: 'delete mysql ca certificate if it exists (Java 8)'
   shell: 'keytool -delete -keystore {{ item }}/jre/lib/security/cacerts -storepass "changeit" -noprompt -alias mysql'
   with_items:
@@ -68,12 +65,9 @@
     - '{{ java_homes }}'
   become: true
   ignore_errors: true
-  # WCA-3165 Once Java 8's unsupported we could do a failed_when instead of ignore_errors, like:
-  # failed_when: >
-  #    'Alias <mysql> does not exist' not in command_result.stdout and command_result.stdout != ''
   register: command_result
 
-# WCA-3165 Java certs used to be at {{ item }}/jre/lib/security/cacerts instead. Let this fail if directory's missing until 8's unsupported, then delete task completely.
+# Java certs used to be at {{ item }}/jre/lib/security/cacerts instead. Let this fail if directory's missing until 8's unsupported, then delete task completely.
 - name: 'import mysql ca certificate to truststore (Java 8)'
   shell: 'keytool -import -file {{ tmp_mysql_pem.stdout }}/mysql-ca.pem -keystore {{ item }}/jre/lib/security/cacerts -storepass "changeit" -noprompt -alias mysql'
   with_items: '{{ java_homes }}'
@@ -83,7 +77,7 @@
 - name: 'import mysql ca certificate to truststore (Java 9+)'
   shell: 'keytool -import -file {{ tmp_mysql_pem.stdout }}/mysql-ca.pem -keystore {{ item }}/lib/security/cacerts -storepass "changeit" -noprompt -alias mysql'
   with_items: '{{ java_homes }}'
-  # WCA-3165 Once Java 8's completely unsupported we can remove this ignore_errors:
+  # Once Java 8's completely unsupported we can remove this ignore_errors:
   ignore_errors: true
   become: true
 

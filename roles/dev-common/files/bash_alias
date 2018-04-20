@@ -10,7 +10,9 @@ alias hm=home
 alias hoem=home
 alias c="clear"
 alias lsa="ls -a"
+alias ll="ls -lhA"
 alias lla="ll -a"
+alias mkdir="mkdir -pv"
 alias vi=vim
 alias ff="find .-name $1"
 alias cd..="cd .."
@@ -18,6 +20,13 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
+alias rm="rm -i"
+alias grep="grep --color=auto"
+alias h="history"
+alias root="sudo -i"
+alias su="sudo -i"
+sudo wget="wget -c"
+alias dbfresh=".~/analytics/database/alterSchema/dbfresh.rb"
 
 # User specific environment and startup programs
 
