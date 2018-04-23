@@ -5,11 +5,8 @@
     src: 'bash_alias'
     dest: '/Users/{{ ansible_user_id }}/.bash_alias'
     force: yes
-    group: sys
-    owner: root
     mode: 0555
-    present: true
-
+    state: present
 
 - name: 'Add bash_alias to .profile'
   lineinfile:
