@@ -4,9 +4,4 @@
   roles:
     - { role: 'dev-common', tags: 'common' }
     - { role: 'dev-applications', tags: 'applications' }
-    - { role: 'dev-mysql', tags: ['mysql', 'dev-mysql'] }
-    - { role: 'dev-redis', tags: ['redis', 'dev-redis'] }
-    - { role: 'dev-tomcat', tags: 'tomcat' }
     - { role: 'dev-mac-prefs', tags: 'mac-prefs' }
-     # unobvious: must go after dev-mysql/mysql-client (not sure which one) if you expect mysql2 gem install to work
-    - { role: 'dev-gems', tags: 'gems' }

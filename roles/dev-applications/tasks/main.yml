@@ -2,23 +2,28 @@
 
 - include: '../../dev-common/tasks/brew.yml'
 
-- name: 'install user applications with cask'
-  homebrew_cask:
+# Homebrew
+- homebrew_tap:
+    tap: '{{ item }}'
+  with_items: '{{ homebrew_taps }}'
+  tags: brew
+
+- homebrew:
+    name: git
+    state: latest
+    update_homebrew: yes
+  tags: brew
+
+- homebrew:
+    name: '{{ homebrew_packages }}'
+    state: latest
+  tags: brew
+
+- homebrew_cask:
     name: '{{ item }}'
-    state: 'present'
-  with_items:
-    - 'appcleaner'
-    - 'google-chrome'
-    - 'firefox'
-    - 'dropbox'
-    - 'intellij-idea'
-    - 'sequel-pro'
-    - 'slack'
-    - 'superduper'
-    - 'adobe-reader'
-    - 'virtualbox'
-    - 'sourcetree'
-  ignore_errors: true
+    state: installed
+  with_items: '{{ homebrew_cask_packages }}'
+  tags: brew
 
 - name: 'copy apps from cask to /Applications (copy for idempotency as cask does not expect files to have moved)'
   shell: 'find /usr/local/Caskroom/ -name "*.app" -not -path "*/Contents/*" -exec cp -f {} /Applications ";"'

@@ -1,0 +1,42 @@
+---
+
+- name: 'Set .bash_alias content from repo'
+  get_url:
+    url: https://raw.githubusercontent.com/Kelley12/allpunsindented/master/bash/.bash_alias
+    dest: '/Users/{{ ansible_user_id }}/.bash_alias'
+    force: yes
+    mode: 0555
+  become: true
+
+- name: 'Create .profile file'
+  file:
+    path: '/Users/{{ ansible_user_id }}/.profile'
+    state: touch
+    mode: 0555
+
+- name: 'Add bash_alias to .profile'
+  lineinfile:
+    create: true
+    path: '/Users/{{ ansible_user_id }}/.profile'
+    line: '[[ -s "$HOME/.bash_alias" ]] && source "$HOME/.bash_alias" # Load custom alias .bash_alias'
+    state: 'present'
+
+- name: 'Set code as EDITOR'
+  lineinfile:
+    create: true
+    path: '/Users/{{ ansible_user_id }}/.profile'
+    line: 'export EDITOR=\"code\"'
+    state: 'present'
+
+- name: 'Create .bash_profile file'
+  file:
+    path: '/Users/{{ ansible_user_id }}/.bash_profile'
+    state: touch
+    mode: 0555
+
+- name: 'Add profile to .bash_profile'
+  lineinfile:
+    create: true
+    path: '/Users/{{ ansible_user_id }}/.bash_profile'
+    line: '[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load default .profile'
+    state: 'present'

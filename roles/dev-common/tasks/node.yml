@@ -1,5 +1,4 @@
-# Provision node, which we now use globally w/ ionic on dev boxes
-
+# Provision node
 ---
 
 - include: 'brew.yml'

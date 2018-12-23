@@ -3,32 +3,8 @@
 - include: 'brew.yml'
   tags: 'brew'
 
-- include: 'maven.yml'
-  tags: 'maven'
-
-- include: 'java.yml'
-  tags: 'java'
-
-- include: 'roles/java-common/tasks/java-common.yml'
-  tags: 'java'
-
-- include: 'ruby.yml'
-  tags: 'ruby'
-
-- include: 'aws.yml'
-  tags: 'aws'
-
-- include: 'svn.yml'
-  tags: 'svn'
-
-- include: 'gradle.yml'
-  tags: 'gradle'
-
 - include: 'node.yml'
   tags: 'node'
 
-- include: 'bash_alias.yml'
-  tags: 'bash_alias'
-  
-- include: 'sublime.yml'
-  tags: 'sublime'
+- include: 'profile.yml'
+  tags: 'profile'

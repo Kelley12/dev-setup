@@ -1,0 +1,68 @@
+---
+homebrew_taps:
+  - homebrew/cask
+  - homebrew/cask-fonts
+  - homebrew/cask-versions
+
+homebrew_packages:
+  - gdbm
+  - git
+  - jpeg
+  - jpegoptim
+  - libpng
+  - libtool
+  - libyaml
+  - ncdu
+  - node
+  - ocaml
+  - ocamlbuild
+  - opam
+  - openssl
+  - parallel
+  - pkg-config
+  - pngcrush
+  - postgresql
+  - pypy
+  - python
+  - python3
+  - readline
+  - ripgrep
+  - rtmpdump
+  - ruby
+  - ruby-build
+  - ruby-install
+  - shellcheck
+  - sqlite
+  - terraform
+  - tmux
+  - tree
+  - wget
+  - xz
+  - yarn
+
+homebrew_cask_packages:
+  - 1password
+  - adobe-reader
+  - appcleaner
+  - dash
+  - disk-inventory-x
+  - docker
+  - gimp
+  - google-chrome
+  - java
+  - slack
+  - sourcetree
+  - spotify
+  - sublime-text
+  - teamviewer
+  - virtualbox
+  - visual-studio-code
+
+vscode_extensions:
+  - alefragnani.Bookmarks
+  - dbaeumer.vscode-eslint
+  - eg2.tslint
+  - ms-python.python
+  - ms-vscode.cpptools
+  - msjsdiag.debugger-for-chrome
+  - vsciot-vscode.vscode-arduino
