@@ -28,3 +28,7 @@
 - name: 'copy apps from cask to /Applications (copy for idempotency as cask does not expect files to have moved)'
   shell: 'find /usr/local/Caskroom/ -name "*.app" -not -path "*/Contents/*" -exec cp -f {} /Applications ";"'
   become: true
+
+- name: Install TypeScript node.js package.
+  npm:
+    name: typescript
