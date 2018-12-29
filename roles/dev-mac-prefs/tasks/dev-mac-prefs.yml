@@ -13,6 +13,9 @@
 - name: 'immediately require password'
   command: 'defaults write com.apple.screensaver askForPasswordDelay -int 0'
 
+- name: 'turning on hot corner (bottom left) to start screen saver'
+  command: 'defaults write com.apple.dock wvous-br-corner -int 5'
+
 # From here down, source: https://discussions.apple.com/thread/6683455
 
 - name: 'quitting system preferences'
