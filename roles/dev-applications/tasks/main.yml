@@ -32,3 +32,8 @@
 - name: Install TypeScript node.js package.
   npm:
     name: typescript
+
+- name: Install "systemjs" node.js package on version 0.21.5.
+  npm:
+    name: systemjs
+    version: '0.21.5'
