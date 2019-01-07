@@ -41,10 +41,10 @@ homebrew_packages:
   - yarn
 
 homebrew_cask_packages:
-  - 1password
   - adobe-reader
   - appcleaner
   - aerial
+  - buttercup
   - dash
   - disk-inventory-x
   - docker
@@ -67,3 +67,4 @@ vscode_extensions:
   - ms-vscode.cpptools
   - msjsdiag.debugger-for-chrome
   - vsciot-vscode.vscode-arduino
+  - maty.vscode-mocha-sidebar
