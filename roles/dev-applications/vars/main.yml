@@ -68,3 +68,5 @@ vscode_extensions:
   - msjsdiag.debugger-for-chrome
   - vsciot-vscode.vscode-arduino
   - maty.vscode-mocha-sidebar
+  - eamodio.gitlens
+  - mrmlnc.vscode-json5
