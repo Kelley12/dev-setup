@@ -18,7 +18,7 @@
   lineinfile:
     create: true
     path: '/Users/{{ ansible_user_id }}/.profile'
-    line: '[[ -s "$HOME/.bash_alias" ]] && source "$HOME/.bash_alias" # Load custom alias .bash_alias'
+    line: '[[ -s "$HOME/.bash_alias" ]] && source "$HOME/.bash_alias > /dev/null 2>&1" # Load custom alias .bash_alias'
     state: 'present'
 
 - name: 'Set code as EDITOR'
@@ -38,5 +38,5 @@
   lineinfile:
     create: true
     path: '/Users/{{ ansible_user_id }}/.bash_profile'
-    line: '[[ -s "$HOME/.profile" ]] && source "$HOME/.profile" # Load default .profile'
+    line: '[[ -s "$HOME/.profile" ]] && source "$HOME/.profile > /dev/null 2>&1" # Load default .profile'
     state: 'present'
